@@ -13,46 +13,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SearchButton extends JButton {
-    private static int U_ID = 1;
+public class SearchButton extends TableButton {
     private List<Searchable> searchableList;
 
-    public SearchButton(HashMap<String,Object> settings){
-        super("Search");
+    public SearchButton(HashMap<String,Object> settings, LineItemTable itemList){
+        super(settings,itemList);
+        this.setText("Search");
+        this.searchableList = new ArrayList<>();
         this.setContentAreaFilled(false);
         this.setOpaque(true);
-        this.searchableList = new ArrayList<>();
+        this.setPreferredSize(new Dimension(100,30));
         this.setBackground((Color)settings.get("SB_Background"));
         this.setBorder(new EmptyBorder(0,0,0,0));
         this.setForeground((Color)settings.get("SB_FontColor"));
-        this.setPreferredSize(new Dimension(100,30));
-        //Prevents a border from appearing around the button text
-        this.setFocusable(false);
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                setBackground((Color)settings.get("SB_ButtonPressed"));
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                setBackground((Color)settings.get("SB_Background"));
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                setBackground((Color)settings.get("SB_ButtonEntered"));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                //super.mouseExited(e);
-                setBackground((Color)settings.get("SB_Background"));
-            }
-        });
-        this.setName("SearchButton_"+U_ID);
-        U_ID++;
+        this.setMouseStateColor(GeneralButton.MOUSE_PRESSED,"SB_ButtonPressed");
+        this.setMouseStateColor(GeneralButton.MOUSE_RELEASED,"SB_Background");
+        this.setMouseStateColor(GeneralButton.MOUSE_ENTERED,"SB_ButtonEntered");
+        this.setMouseStateColor(GeneralButton.MOUSE_EXITED,"SB_Background");
     }
     public void addSearchableComponent(Searchable c){
         this.searchableList.add(c);
@@ -69,4 +46,8 @@ public class SearchButton extends JButton {
         return result;
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(returnResults());
+    }
 }

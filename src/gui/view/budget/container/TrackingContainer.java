@@ -22,12 +22,11 @@ public class TrackingContainer extends BudgetContainer {
         JPanel filterSurface = new JPanel();
 
         //Work in progress
-        LineItemTable jtab = new LineItemTable(settings, dropDownColumnName);
-        JScrollPane lineItemSurface = new JScrollPane(jtab);
+        LineItemTable itemList = new LineItemTable(settings, dropDownColumnName);
+        JScrollPane lineItemSurface = new JScrollPane(itemList);
         lineItemSurface.setBorder(new EmptyBorder(5,0,0,0));
         lineItemSurface.getViewport().setBackground((Color)settings.get("UI_Background"));
         lineItemSurface.setBackground((Color)settings.get("UI_Background"));
-
 
         optionsSurface.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -50,20 +49,18 @@ public class TrackingContainer extends BudgetContainer {
         JPanel buttonSurface = new JPanel();
         buttonSurface.setLayout(new GridLayout(1,2));
         buttonSurface.setBackground((Color)settings.get("UI_Background"));
-        AddButton ab = new AddButton(settings);
-        ResetButton rb = new ResetButton(settings);
-        DeleteButton db = new DeleteButton(settings);
-        db.linkLineItemTable(jtab);
+        AddButton ab = new AddButton(settings,itemList);
+        ResetButton rb = new ResetButton(settings,itemList);
+        DeleteButton db = new DeleteButton(settings,itemList);
         buttonSurface.add(ab);
         buttonSurface.add(rb);
         buttonSurface.add(db);
         searchBarButtonSurface.add(buttonSurface,BorderLayout.EAST);
         searchBarButtonSurface.setBorder(new EmptyBorder(5,5,5,5));
 
-        FilterBar fb = new FilterBar(this.settings, dropDownColumnName,jtab.getModel());
-        SearchButton se = new SearchButton(this.settings);
+        FilterBar fb = new FilterBar(this.settings, dropDownColumnName,itemList.getModel());
+        SearchButton se = new SearchButton(this.settings,itemList);
         se.addSearchableComponents(new Searchable[]{sb,fb});
-        se.addActionListener(this);
         filterSurface.setBackground((Color)settings.get("UI_Background"));
         filterSurface.setLayout(new BorderLayout());
         filterSurface.add(fb,BorderLayout.WEST);

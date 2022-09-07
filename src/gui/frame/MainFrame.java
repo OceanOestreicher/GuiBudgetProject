@@ -1,5 +1,6 @@
 package gui.frame;
 
+import gui.components.TitleBarButton;
 import gui.view.DashboardView;
 import gui.view.ViewFactory;
 
@@ -84,10 +85,10 @@ public class MainFrame extends JFrame implements ActionListener {
         this.settings.put("GB_ButtonPressed",new Color(175,175,175));
         this.settings.put("GB_ButtonEntered",new Color(150,150,150));
         this.settings.put("GB_FontColor", new Color(225,225,225));
-        this.settings.put("GB_Font", new Font("Dialog",Font.PLAIN,35));
         //Button Group 1: Add/Reset/Delete Button Settings
         this.settings.put("B1_ResetIcon","reset.png");
         this.settings.put("B1_DeleteIcon","delete.png");
+        this.settings.put("B1_Font",new Font("Dialog",Font.PLAIN,35));
         //Filter Bar Settings
         this.settings.put("FB_FontColor", new Color(200,200,200));
         this.settings.put("FB_Font",new Font("Dialog",Font.PLAIN,15));
@@ -116,16 +117,7 @@ public class MainFrame extends JFrame implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource().getClass().getSimpleName().equals("TitleBarButton")){
-            TitleBarButton source = (TitleBarButton)e.getSource();
-            if(source.getName().equals("ExitApplicationButton")){
-                this.dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
-            }
-            else if(source.getName().equals("MinimizeApplicationButton")){
-                this.setState(Frame.ICONIFIED);
-            }
-        }
-        else if(e.getSource().getClass().getSimpleName().equals("JMenuItem")){
+        if(e.getSource().getClass().getSimpleName().equals("JMenuItem")){
             JMenuItem source = (JMenuItem)e.getSource();
             if(source.getName().equals("ExitApplicationMenu")){
                 this.dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));

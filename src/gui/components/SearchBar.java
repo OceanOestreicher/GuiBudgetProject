@@ -40,7 +40,7 @@ public class SearchBar extends JTextField implements Searchable {
     }
     @Override
     public String[] getResults() {
-        String[] result = {"<SB_T>"+(this.getText().equals("Search")?"":this.getText())};
+        String[] result = {"<SB_T>"+(this.getText().equals(this.defaultText)?"":this.getText())};
         this.setText(this.defaultText);
         return result;
     }

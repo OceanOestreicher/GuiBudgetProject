@@ -1,18 +1,19 @@
 package gui.frame;
 
+import gui.components.ExitButton;
+import gui.components.MinimizeButton;
+import gui.components.TitleBarButton;
+
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 public class TitleBar extends JPanel {
 
     private Color separatorColor;
-    public TitleBar(ActionListener frame, HashMap<String,Object> settings){
+    public TitleBar(JFrame frame, HashMap<String,Object> settings){
         super();
         this.setBackground((Color)settings.get("UI_Background"));
         this.setLayout(new BorderLayout());
@@ -22,8 +23,8 @@ public class TitleBar extends JPanel {
         JPanel titleBarButtonSurface = new JPanel();
         titleBarButtonSurface.setBackground((Color)settings.get("UI_Background"));
         titleBarButtonSurface.setLayout(new GridLayout(1,2));
-        TitleBarButton close = new TitleBarButton(settings,frame,"X","ExitApplicationButton",(Color)settings.get("TB_ExitButtonPressed"),(Color)settings.get("TB_ExitButtonEntered"));
-        TitleBarButton minimize = new TitleBarButton(settings,frame,"---","MinimizeApplicationButton",(Color)settings.get("TB_MousePressed"),(Color)settings.get("TB_MouseEntered"));
+        ExitButton close = new ExitButton(settings,frame);
+        MinimizeButton minimize = new MinimizeButton(settings,frame);
         titleBarButtonSurface.add(minimize);
         titleBarButtonSurface.add(close);
         //Title Bar Icon
@@ -55,7 +56,7 @@ public class TitleBar extends JPanel {
         saveFile.setName("SaveFileMenu");
         JMenuItem menuExit = new JMenuItem("Exit   ");
         menuExit.setName("ExitApplicationMenu");
-        menuExit.addActionListener(frame);
+        menuExit.addActionListener((ActionListener)frame);
         file.add(newView);
         file.add(openFile);
         file.add(saveFile);
