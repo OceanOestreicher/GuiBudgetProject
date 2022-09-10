@@ -20,8 +20,6 @@ public class SearchButton extends TableButton {
         super(settings,itemList);
         this.setText("Search");
         this.searchableList = new ArrayList<>();
-        this.setContentAreaFilled(false);
-        this.setOpaque(true);
         this.setPreferredSize(new Dimension(100,30));
         this.setBackground((Color)settings.get("SB_Background"));
         this.setBorder(new EmptyBorder(0,0,0,0));

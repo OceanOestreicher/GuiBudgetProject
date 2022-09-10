@@ -31,7 +31,7 @@ public class BudgetDashboardView extends DashboardView {
         TrackingContainer Income = new TrackingContainer(this.settings, "Source","Search Income");
         Income.setBackground((Color)this.settings.get("UI_Background"));
         Income.setBorder(new LineBorder((Color)this.settings.get("UI_Border"),1));
-        JPanel Expenses = new JPanel();
+        TrackingContainer Expenses = new TrackingContainer(this.settings, "Type","Search Expenses");
         Expenses.setBackground((Color)this.settings.get("UI_Background"));
         Expenses.setBorder(new LineBorder((Color)this.settings.get("UI_Border"),1));
         JPanel Savings = new JPanel();

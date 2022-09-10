@@ -15,6 +15,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Vector;
 
 public class LineItemTable extends JTable {
@@ -25,7 +26,7 @@ public class LineItemTable extends JTable {
         super(dm,cm,sm);
         this.settings = settings;
 
-        setModel(new DefaultTableModel(new Object[][]{{"Bill","1-1-1900","Avista","$1400","Test Note"},{"Extra","1-1-1902","Cable","$1400","Test Note2"},{"Extra","1-1-1902","Broken","$1500","Test Note3"}},new Object[]{filterColumnName,"Date","Name","Amount","Note"}));
+        setModel(new DefaultTableModel(new Object[]{filterColumnName,"Date","Name","Amount","Note"},0));
         setGridColor((Color)settings.get("UI_Background"));
         setFont((Font)settings.get("IL_Font"));
         setDefaultRenderer(Object.class, new CustomTableCellRenderer(settings));
@@ -39,7 +40,6 @@ public class LineItemTable extends JTable {
         getTableHeader().setDefaultRenderer(new CustomTableCellHeaderRenderer(settings));
         getTableHeader().setReorderingAllowed(false);
         setAutoCreateRowSorter(true);
-
     }
 
     public LineItemTable(HashMap<String,Object> settings,String filterColumnName){
@@ -61,6 +61,16 @@ public class LineItemTable extends JTable {
         this(settings,filterColumnName,new DefaultTableModel(rowData,columnNames));
     }
 
+    public void addEntry(String dataToAdd){
+        String[] newRow = dataToAdd.split("<>");
+        if(newRow.length > getColumnCount())throw new InputMismatchException("Invalid row data entered");
+        for(int i = 0; i < newRow.length;i++){
+            if(newRow[i].equals("<N/A>")){
+                newRow[i] = "";
+            }
+        }
+        ((DefaultTableModel)getModel()).addRow(newRow);
+    }
 
     //Private Classes
     private static class CustomTableCellRenderer extends DefaultTableCellRenderer {

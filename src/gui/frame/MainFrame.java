@@ -58,6 +58,7 @@ public class MainFrame extends JFrame implements ActionListener {
         this.settings = new HashMap<>();
         //UI Main Settings
         this.settings.put("UI_Background",Color.darkGray);
+        this.settings.put("UI_Midground",new Color(100,100,100));
         this.settings.put("UI_Foreground",Color.white);
         this.settings.put("UI_Border",Color.black);
         this.settings.put("UI_Icon","budget.png");
@@ -85,10 +86,11 @@ public class MainFrame extends JFrame implements ActionListener {
         this.settings.put("GB_ButtonPressed",new Color(175,175,175));
         this.settings.put("GB_ButtonEntered",new Color(150,150,150));
         this.settings.put("GB_FontColor", new Color(225,225,225));
-        //Button Group 1: Add/Reset/Delete Button Settings
+        //Button Group 1: Add/Reset/Delete/Submit Button Settings
         this.settings.put("B1_ResetIcon","reset.png");
         this.settings.put("B1_DeleteIcon","delete.png");
         this.settings.put("B1_Font",new Font("Dialog",Font.PLAIN,35));
+        this.settings.put("B1_SubmitBackground",new Color(135,135,135));
         //Filter Bar Settings
         this.settings.put("FB_FontColor", new Color(200,200,200));
         this.settings.put("FB_Font",new Font("Dialog",Font.PLAIN,15));
@@ -114,6 +116,9 @@ public class MainFrame extends JFrame implements ActionListener {
         this.settings.put("IL_HeaderRowBackground",new Color(150,150,150));
         this.settings.put("IL_HeaderFontColor",Color.BLACK);
         this.settings.put("IL_Font",new Font("Dialog",Font.PLAIN,13));
+        //Add Line Item Form Settings
+        this.settings.put("IF_Background",new Color(100,100,100));
+        this.settings.put("IF_FontColor",Color.BLACK);
     }
     @Override
     public void actionPerformed(ActionEvent e) {

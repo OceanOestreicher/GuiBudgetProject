@@ -8,8 +8,6 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 public abstract class TableButton extends GeneralButton  {
-
-    protected HashMap<String,Object> settings;
     protected LineItemTable itemList;
 
     public TableButton(HashMap<String,Object> settings, LineItemTable itemList){
