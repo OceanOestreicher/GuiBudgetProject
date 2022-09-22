@@ -14,9 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SearchButton extends TableButton {
+    private JLabel filterIcon;
     private List<Searchable> searchableList;
 
-    public SearchButton(HashMap<String,Object> settings, LineItemTable itemList){
+    public SearchButton(HashMap<String,Object> settings, LineItemTable itemList,JLabel filterIcon){
         super(settings,itemList);
         this.setText("Search");
         this.searchableList = new ArrayList<>();
@@ -28,6 +29,7 @@ public class SearchButton extends TableButton {
         this.setMouseStateColor(GeneralButton.MOUSE_RELEASED,"SB_Background");
         this.setMouseStateColor(GeneralButton.MOUSE_ENTERED,"SB_ButtonEntered");
         this.setMouseStateColor(GeneralButton.MOUSE_EXITED,"SB_Background");
+        this.filterIcon = filterIcon;
     }
     public void addSearchableComponent(Searchable c){
         this.searchableList.add(c);
@@ -46,6 +48,9 @@ public class SearchButton extends TableButton {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         System.out.println(returnResults());
+        //True only if table was filtered?
+        filterIcon.setVisible(true);
     }
 }

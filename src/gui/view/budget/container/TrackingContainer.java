@@ -42,6 +42,7 @@ public class TrackingContainer extends BudgetContainer {
         gbc.weightx = 1;
         optionsSurface.add(filterSurface,gbc);
 
+        JLabel filterIcon = new JLabel(new ImageIcon(new ImageIcon((String)settings.get("FB_FilterIcon")).getImage().getScaledInstance(20,20,Image.SCALE_SMOOTH)));
         searchBarButtonSurface.setBackground((Color)settings.get("UI_Background"));
         searchBarButtonSurface.setLayout(new BorderLayout());
         SearchBar sb = new SearchBar(settings,searchBarDefaultText);
@@ -50,7 +51,7 @@ public class TrackingContainer extends BudgetContainer {
         buttonSurface.setLayout(new GridLayout(1,2));
         buttonSurface.setBackground((Color)settings.get("UI_Background"));
         AddButton ab = new AddButton(settings,itemList);
-        ResetButton rb = new ResetButton(settings,itemList);
+        ResetButton rb = new ResetButton(settings,itemList,filterIcon);
         DeleteButton db = new DeleteButton(settings,itemList);
         buttonSurface.add(ab);
         buttonSurface.add(rb);
@@ -59,12 +60,19 @@ public class TrackingContainer extends BudgetContainer {
         searchBarButtonSurface.setBorder(new EmptyBorder(5,5,5,5));
 
         FilterBar fb = new FilterBar(this.settings, dropDownColumnName,itemList.getModel());
-        SearchButton se = new SearchButton(this.settings,itemList);
+
+        SearchButton se = new SearchButton(this.settings,itemList,filterIcon);
         se.addSearchableComponents(new Searchable[]{sb,fb});
+
+        filterIcon.setVisible(false);
+        JPanel searchButtonSurface = new JPanel();
+        searchButtonSurface.setBackground((Color)settings.get("UI_Background"));
+        searchButtonSurface.add(filterIcon);
+        searchButtonSurface.add(se);
         filterSurface.setBackground((Color)settings.get("UI_Background"));
         filterSurface.setLayout(new BorderLayout());
         filterSurface.add(fb,BorderLayout.WEST);
-        filterSurface.add(se,BorderLayout.EAST);
+        filterSurface.add(searchButtonSurface,BorderLayout.EAST);
         filterSurface.setBorder(new CompoundBorder(new MatteBorder(0,0,1,0,(Color)settings.get("FB_SeparatorColor")),new EmptyBorder(5,5,5,5)));
 
 

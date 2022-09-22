@@ -101,6 +101,7 @@ public class MainFrame extends JFrame implements ActionListener {
         this.settings.put("FB_ListBackground",new Color(50,50,50));
         this.settings.put("FB_ListSelectedTextColor",Color.BLACK);
         this.settings.put("FB_SeparatorColor",new Color(115,115,115));
+        this.settings.put("FB_FilterIcon","filter.png");
         //Search Button Settings
         this.settings.put("SB_Background",new Color(115,115,115));
         this.settings.put("SB_ButtonPressed",new Color(150,150,150));
@@ -119,6 +120,9 @@ public class MainFrame extends JFrame implements ActionListener {
         //Add Line Item Form Settings
         this.settings.put("IF_Background",new Color(100,100,100));
         this.settings.put("IF_FontColor",Color.BLACK);
+        this.settings.put("IF_EntryBackground",new Color(130,130,130));
+        this.settings.put("IF_HeaderBackground", new Color(50,50,50));
+        this.settings.put("IF_FrameBorder", Color.BLACK);
     }
     @Override
     public void actionPerformed(ActionEvent e) {

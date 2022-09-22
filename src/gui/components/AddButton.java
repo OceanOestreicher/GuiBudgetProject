@@ -18,7 +18,7 @@ public class AddButton extends TableButton {
         this.setFont((Font)settings.get("B1_Font"));
     }
     public void linkForm(){
-        new AddLineItemForm(this.settings,this.itemList);
+        AddLineItemForm.getInstance(this.settings,this.itemList);
     }
 
     @Override

@@ -11,9 +11,8 @@ import java.util.HashMap;
 
 public class FormSubmitButton extends TableButton{
     private Form form;
-    private boolean close = false;
-    public FormSubmitButton(HashMap<String,Object> settings, LineItemTable table, Form newForm){
-        super(settings,table);
+    public FormSubmitButton(HashMap<String,Object> settings, LineItemTable itemList, Form newForm){
+        super(settings,itemList);
         this.setBackground((Color)settings.get("B1_SubmitBackground"));
         this.setPreferredSize(new Dimension(100,30));
         this.setBorder(new EmptyBorder(0,0,0,0));
@@ -30,8 +29,5 @@ public class FormSubmitButton extends TableButton{
                 ((JFrame) form).dispatchEvent(new WindowEvent((JFrame)form, WindowEvent.WINDOW_CLOSING));
             }
         }
-    }
-    public boolean isClosing(){
-        return close;
     }
 }
