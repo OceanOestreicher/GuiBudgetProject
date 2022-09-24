@@ -4,6 +4,8 @@ import gui.components.interfaces.Searchable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,19 +40,21 @@ public class SearchButton extends TableButton {
         for(Searchable s: c) this.searchableList.add(s);
     }
     //Process results instead?
-    public List<String> returnResults(){
-        ArrayList<String> result = new ArrayList<>();
-        for(Searchable i: this.searchableList){
-            for(String s: i.getResults())result.add(s);
-        }
-        return result;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        System.out.println(returnResults());
         //True only if table was filtered?
-        filterIcon.setVisible(true);
+        if(itemList.getRowCount()>0){
+            ArrayList<RowFilter<Object,Object>> filters = new ArrayList<>();
+            for(Searchable s: searchableList){
+                RowFilter<Object,Object> result = s.getResults();
+                if(result != null) filters.add(result);
+            }
+            if(filters.size() > 0){
+                filterIcon.setVisible(true);
+                TableRowSorter<DefaultTableModel> trs = (TableRowSorter<DefaultTableModel>) itemList.getRowSorter();
+                trs.setRowFilter(RowFilter.andFilter(filters));
+            }
+
+        }
     }
 }

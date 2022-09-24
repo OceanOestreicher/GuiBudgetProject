@@ -2,6 +2,8 @@ package gui.components;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
@@ -20,5 +22,7 @@ public class ResetButton extends TableButton {
     @Override
     public void actionPerformed(ActionEvent e) {
         filterIcon.setVisible(false);
+        TableRowSorter<DefaultTableModel> trs = (TableRowSorter<DefaultTableModel>) itemList.getRowSorter();
+        trs.setRowFilter(null);
     }
 }

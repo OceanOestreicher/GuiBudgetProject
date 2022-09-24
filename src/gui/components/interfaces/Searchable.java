@@ -1,5 +1,7 @@
 package gui.components.interfaces;
 
+import javax.swing.*;
+
 public interface Searchable {
-    String[] getResults();
+    RowFilter<Object,Object> getResults();
 }

@@ -39,9 +39,12 @@ public class SearchBar extends JTextField implements Searchable {
         U_ID++;
     }
     @Override
-    public String[] getResults() {
-        String[] result = {"<SB_T>"+(this.getText().equals(this.defaultText)?"":this.getText())};
+    public RowFilter<Object, Object> getResults() {
+        RowFilter<Object,Object>filter = null;
+        if(!this.getText().equals(this.defaultText)){
+            filter = RowFilter.regexFilter(this.getText()+"+", 0, 1, 2, 3, 4);
+        }
         this.setText(this.defaultText);
-        return result;
+        return filter;
     }
 }

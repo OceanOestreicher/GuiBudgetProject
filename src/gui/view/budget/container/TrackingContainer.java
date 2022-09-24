@@ -82,8 +82,8 @@ public class TrackingContainer extends BudgetContainer {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        SearchButton s = (SearchButton)e.getSource();
-        System.out.println(s.returnResults());
+       // SearchButton s = (SearchButton)e.getSource();
+        //System.out.println(s.returnResults());
     }
 
 }

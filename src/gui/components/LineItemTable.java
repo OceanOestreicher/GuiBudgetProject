@@ -5,18 +5,13 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Vector;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class LineItemTable extends JTable {
 
@@ -39,7 +34,22 @@ public class LineItemTable extends JTable {
         });
         getTableHeader().setDefaultRenderer(new CustomTableCellHeaderRenderer(settings));
         getTableHeader().setReorderingAllowed(false);
-        setAutoCreateRowSorter(true);
+        TableRowSorter<DefaultTableModel> trs = new TableRowSorter<>((DefaultTableModel) getModel());
+        trs.setComparator(1, new Comparator<Date>() {
+            @Override
+            public int compare(Date o1, Date o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        trs.setSortsOnUpdates(true);
+        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+        sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
+        trs.setSortKeys(sortKeys);
+        trs.setSortable(0,false);
+        trs.setSortable(2,false);
+        trs.setSortable(3,false);
+        trs.setSortable(4,false);
+        setRowSorter(trs);
     }
 
     public LineItemTable(HashMap<String,Object> settings,String filterColumnName){
@@ -64,14 +74,27 @@ public class LineItemTable extends JTable {
     public void addEntry(String dataToAdd){
         String[] newRow = dataToAdd.split("<>");
         if(newRow.length > getColumnCount())throw new InputMismatchException("Invalid row data entered");
+        Object[] rowData = new Object[getColumnCount()];
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
         for(int i = 0; i < newRow.length;i++){
-            if(newRow[i].equals("<N/A>")){
-                newRow[i] = "";
+            if(i == 1 && !newRow[i].equals("<N/A>")){
+                try{rowData[i] = sdf.parse(newRow[i]);}
+                catch(ParseException p){}
             }
+            else if(i==1){
+                rowData[i] = null;
+            }
+            else if( newRow[i].equals("<N/A>")){
+                rowData[i] = "";
+            }
+            else rowData[i] = newRow[i];
         }
-        ((DefaultTableModel)getModel()).addRow(newRow);
+        ((DefaultTableModel)getModel()).addRow(rowData);
     }
-
+    public boolean isCellEditable(int row, int column){
+        if(column == 1) return false;
+        return true;
+    }
     //Private Classes
     private static class CustomTableCellRenderer extends DefaultTableCellRenderer {
         private HashMap<String,Object> settings;
@@ -105,6 +128,13 @@ public class LineItemTable extends JTable {
             else{
                 c.setBackground((Color)settings.get("IL_UnselectedRow"));
                 c.setForeground((Color)settings.get("IL_FontColor"));
+            }
+
+            if(column == 1 && table.getValueAt(row,column) != null){
+                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+                Date date = (Date)table.getValueAt(row,column);
+                JLabel dateCell = (JLabel)c;
+                dateCell.setText(sdf.format(date));
             }
             return c;
         }

@@ -1,6 +1,7 @@
 package gui.components;
 
 import gui.components.interfaces.Searchable;
+import gui.utils.Date;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -9,12 +10,12 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicComboBoxUI;
-import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -104,12 +105,49 @@ public class FilterBar extends AbstractButton implements Searchable, TableModelL
     }
 
     @Override
-    public String[] getResults() {
-        String[] result = {"<FB_DD>"+this.optionsDropDown.getSelectedItem(),"<FB_DR>"+this.from.getText()+","+this.to.getText()};
+    public RowFilter<Object, Object> getResults() {
+        ArrayList<RowFilter<Object,Object>> filters = new ArrayList<>();
+        RowFilter<Object,Object> filter = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+
+        if(this.optionsDropDown.getSelectedIndex()!= 0){
+            filters.add( RowFilter.regexFilter(this.optionsDropDown.getSelectedItem()+"+",0));
+        }
+        if(!this.from.getText().isEmpty()){
+            String date = Date.getDate(this.from);
+            if(!Date.invalidDate(date)){
+                try {
+                    ArrayList<RowFilter<Object,Object>> fromDateFilters = new ArrayList<>();
+                    fromDateFilters.add(RowFilter.dateFilter(RowFilter.ComparisonType.EQUAL,sdf.parse(date)));
+                    fromDateFilters.add(RowFilter.dateFilter(RowFilter.ComparisonType.AFTER,sdf.parse(date)));
+                    filters.add(RowFilter.orFilter(fromDateFilters));
+
+                }
+                catch(ParseException p){}
+            }
+
+        }
+        if(!this.to.getText().isEmpty()){
+            String date = Date.getDate(this.to);
+            if(!Date.invalidDate(date)){
+                try {
+                    ArrayList<RowFilter<Object,Object>> toDateFilters = new ArrayList<>();
+                    toDateFilters.add(RowFilter.dateFilter(RowFilter.ComparisonType.EQUAL,sdf.parse(date)));
+                    toDateFilters.add(RowFilter.dateFilter(RowFilter.ComparisonType.BEFORE,sdf.parse(date)));
+                    filters.add(RowFilter.orFilter(toDateFilters));
+
+                }
+                catch(ParseException p){}
+            }
+
+        }
+        if(filters.size() > 0){
+            filter = RowFilter.andFilter(filters);
+        }
         this.from.setText("");
         this.to.setText("");
         this.optionsDropDown.setSelectedIndex(0);
-        return result;
+        return filter;
     }
 
     @Override
