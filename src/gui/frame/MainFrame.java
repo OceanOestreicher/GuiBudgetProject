@@ -6,6 +6,7 @@ import gui.view.ViewFactory;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
@@ -25,20 +26,10 @@ public class MainFrame extends JFrame implements ActionListener {
         JPanel surface = new JPanel();
         surface.setLayout(new BorderLayout());
         surface.setBackground((Color)this.settings.get("UI_Background"));
-        surface.setBorder(new LineBorder((Color)this.settings.get("UI_Border"),1));
         //Tabbed View Pane
-        UIManager.put("TabbedPane.contentBorderInsets",new Insets(0,0,0,0));
-        UIManager.put("TabbedPane.selected", this.settings.get("TP_Selected"));
-        UIManager.put("TabbedPane.foreground", this.settings.get("UI_Foreground"));
-        UIManager.put("TabbedPane.unselectedBackground",this.settings.get("TP_Unselected"));
-        UIManager.put("TabbedPane.darkShadow",this.settings.get("UI_Border"));
-        UIManager.put("TabbedPane.light",this.settings.get("UI_Background"));
-        UIManager.put("TabbedPane.shadow",this.settings.get("UI_Background"));
-        UIManager.put("TabbedPane.selectHighlight",this.settings.get("UI_Background"));
-        UIManager.put("TabbedPane.borderHightlightColor",this.settings.get("UI_Border"));
-        //UIManager.put("List.focusSelectedCellHighlightBorder",Color.white);
         JTabbedPane jtb = new JTabbedPane();
         jtb.setFont((Font)this.settings.get("TP_Font"));
+        jtb.setBorder(new MatteBorder(0,1,1,1,(Color)this.settings.get("UI_Border")));
         for(DashboardView dbv: this.views){
             jtb.addTab(dbv.getDisplayName(),dbv.createView());
         }
@@ -57,11 +48,12 @@ public class MainFrame extends JFrame implements ActionListener {
     private void initializeSettings(){
         this.settings = new HashMap<>();
         //UI Main Settings
-        this.settings.put("UI_Background",Color.darkGray);
+        this.settings.put("UI_Background",Color.darkGray);//64, 64, 64
         this.settings.put("UI_Midground",new Color(100,100,100));
         this.settings.put("UI_Foreground",Color.white);
         this.settings.put("UI_Border",Color.black);
         this.settings.put("UI_Icon","budget.png");
+        this.settings.put("UI_TextCursor",createTextCursor());
         this.settings.put("UI_DefaultFont",new Font("Dialog",Font.PLAIN,12));
         this.settings.put("UI_Dimensions",new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()-20),(int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()-50)));
         //Tabbed Pane Settings
@@ -123,6 +115,37 @@ public class MainFrame extends JFrame implements ActionListener {
         this.settings.put("IF_EntryBackground",new Color(130,130,130));
         this.settings.put("IF_HeaderBackground", new Color(50,50,50));
         this.settings.put("IF_FrameBorder", Color.BLACK);
+        //Scroll Bar Settings
+        this.settings.put("SC_Background",new Color(25,25,25));
+        this.settings.put("SC_Thumb",new Color(125,125,125));
+        //----------------------------------------------------------------------
+        //UI Manager Settings
+        UIManager.put("ToolTip.background",new Color(150,150,150));
+        UIManager.put("ToolTip.foreground",Color.WHITE);
+        UIManager.put("ToolTip.border",new LineBorder(Color.BLACK));
+
+        UIManager.put("TabbedPane.contentBorderInsets",new Insets(0,0,0,0));
+        UIManager.put("TabbedPane.selected", this.settings.get("TP_Selected"));
+        UIManager.put("TabbedPane.foreground", this.settings.get("UI_Foreground"));
+        UIManager.put("TabbedPane.unselectedBackground",this.settings.get("TP_Unselected"));
+        UIManager.put("TabbedPane.darkShadow",this.settings.get("UI_Border"));
+        UIManager.put("TabbedPane.light",this.settings.get("UI_Background"));
+        UIManager.put("TabbedPane.shadow",this.settings.get("UI_Background"));
+        UIManager.put("TabbedPane.selectHighlight",this.settings.get("UI_Background"));
+        UIManager.put("TabbedPane.borderHightlightColor",this.settings.get("UI_Border"));
+        UIManager.put("TabbedPane.focus",this.settings.get("TP_Selected"));//ScrollBar.track
+/*
+        UIManager.put("ScrollBar.thumbHighlight",Color.GREEN);
+        UIManager.put("ScrollBar.thumbShadow",Color.GREEN);
+        UIManager.put("ScrollBar.thumbDarkShadow",Color.GREEN);
+        UIManager.put("ScrollBar.thumb",Color.GREEN);
+        UIManager.put("ScrollBar.background",Color.YELLOW);*/
+    }
+    private Cursor createTextCursor(){
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension d = toolkit.getBestCursorSize(8,8);
+        Image image = toolkit.getImage("Text_Cursor.png");//.getScaledInstance(32,32,Image.SCALE_SMOOTH);
+        return toolkit.createCustomCursor(image,new Point(d.width/2,d.height/2),"TextCursor");
     }
     @Override
     public void actionPerformed(ActionEvent e) {

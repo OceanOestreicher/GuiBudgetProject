@@ -15,12 +15,12 @@ public class testMain {
         //System.out.println(defaults.get("List.dropCellBackground").toString());
         for (Object key : keysList)
         {
-            if(key.toString().contains("ComboBox") ) System.out.println(key);
+            if(key.toString().contains("ScrollBar") ) System.out.println(key);
         }
+*/
 
 
 
- */
 
 
     }

@@ -51,6 +51,7 @@ public class AddLineItemForm extends JFrame implements Form {
             entry.setBackground((Color)settings.get("IF_EntryBackground"));
             entry.setForeground((Color)settings.get("IF_FontColor"));
             entry.setCaretColor((Color)settings.get("IF_FontColor"));
+            entry.setCursor((Cursor)settings.get("UI_TextCursor"));
             entry.setBorder(new EmptyBorder(0,0,0,0));
             formFields[i] = entry;
             entrySurface.add(entry);

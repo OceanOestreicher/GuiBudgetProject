@@ -15,7 +15,6 @@ import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -62,6 +61,7 @@ public class FilterBar extends AbstractButton implements Searchable, TableModelL
         this.from.setBorder(new EmptyBorder(0,0,0,0));
         //Changes cursor color
         this.from.setCaretColor((Color)settings.get("FB_FontColor"));
+        this.from.setCursor((Cursor)settings.get("UI_TextCursor"));
         this.add(this.from);
 
         JLabel toLabel = new JLabel("To:");
@@ -76,6 +76,7 @@ public class FilterBar extends AbstractButton implements Searchable, TableModelL
         this.to.setBorder(new EmptyBorder(0,0,0,0));
         //Changes cursor color
         this.to.setCaretColor((Color)settings.get("FB_FontColor"));
+        this.to.setCursor((Cursor)settings.get("UI_TextCursor"));
         this.setName("FB_"+U_ID);
         U_ID++;
         this.add(this.to);
@@ -159,7 +160,6 @@ public class FilterBar extends AbstractButton implements Searchable, TableModelL
        private HashMap<String,Object>settings;
         public CustomComboBoxUI(HashMap<String,Object>settings){
             super();
-            //this.currentValuePane.setFocusable(false);
             this.settings=settings;
 
         }

@@ -27,16 +27,12 @@ public class BudgetDashboardView extends DashboardView {
         //Zero  rows/cols means as many rows/cols as needed
         this.setLayout(new GridLayout(0,3));
         this.setPreferredSize((Dimension)this.settings.get("UI_Dimensions"));
-
         TrackingContainer Income = new TrackingContainer(this.settings, "Source","Search Income");
         Income.setBackground((Color)this.settings.get("UI_Background"));
         Income.setBorder(new LineBorder((Color)this.settings.get("UI_Border"),1));
         TrackingContainer Expenses = new TrackingContainer(this.settings, "Type","Search Expenses");
         Expenses.setBackground((Color)this.settings.get("UI_Background"));
         Expenses.setBorder(new LineBorder((Color)this.settings.get("UI_Border"),1));
-        JPanel Savings = new JPanel();
-        Savings.setBackground((Color)this.settings.get("UI_Background"));
-        Savings.setBorder(new LineBorder((Color)this.settings.get("UI_Border"),1));
         JPanel Graph1 = new JPanel(){
             //placeholder fluff
             @Override
@@ -49,11 +45,14 @@ public class BudgetDashboardView extends DashboardView {
             }
         };
         Graph1.setBorder(new LineBorder((Color)this.settings.get("UI_Border"),1));
+        JPanel Savings = new JPanel();
+        Savings.setBackground((Color)this.settings.get("UI_Background"));
+        Savings.setBorder(new LineBorder((Color)this.settings.get("UI_Border"),1));
         JPanel Budget = new JPanel();
         Budget.setBackground((Color)this.settings.get("UI_Background"));
         Budget.setBorder(new LineBorder((Color)this.settings.get("UI_Border"),1));
         JPanel Calculator = new JPanel();
-        Calculator.setBackground(Color.BLUE);
+        Calculator.setBackground((Color)this.settings.get("UI_Background"));
         Calculator.setBorder(new LineBorder((Color)this.settings.get("UI_Border"),1));
 
         this.add(Income);

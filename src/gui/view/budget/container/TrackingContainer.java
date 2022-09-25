@@ -1,6 +1,7 @@
 package gui.view.budget.container;
 import gui.components.*;
 import gui.components.interfaces.Searchable;
+import gui.ui.CustomScrollBarUI;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -24,6 +25,10 @@ public class TrackingContainer extends BudgetContainer {
         //Work in progress
         LineItemTable itemList = new LineItemTable(settings, dropDownColumnName);
         JScrollPane lineItemSurface = new JScrollPane(itemList);
+        //lineItemSurface.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);//TESTING
+        JScrollBar scb = new JScrollBar(Adjustable.VERTICAL);
+        scb.setUI(new CustomScrollBarUI(settings));
+        lineItemSurface.setVerticalScrollBar(scb);
         lineItemSurface.setBorder(new EmptyBorder(5,0,0,0));
         lineItemSurface.getViewport().setBackground((Color)settings.get("UI_Background"));
         lineItemSurface.setBackground((Color)settings.get("UI_Background"));

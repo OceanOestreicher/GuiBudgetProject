@@ -18,6 +18,7 @@ public class SearchBar extends JTextField implements Searchable {
         this.defaultText = defaultText;
         this.setBackground((Color)settings.get("SE_Background"));
         this.setFont((Font)settings.get("SE_Font"));
+        this.setCursor((Cursor)settings.get("UI_TextCursor"));
         this.setForeground((Color)settings.get("SE_FontColor"));
         this.setBorder(new EmptyBorder(0,0,0,0));
         this.setPreferredSize(new Dimension(300,25));
@@ -41,7 +42,7 @@ public class SearchBar extends JTextField implements Searchable {
     @Override
     public RowFilter<Object, Object> getResults() {
         RowFilter<Object,Object>filter = null;
-        if(!this.getText().equals(this.defaultText)){
+        if(!this.getText().equals(this.defaultText)&&!this.getText().isEmpty()){
             filter = RowFilter.regexFilter(this.getText()+"+", 0, 1, 2, 3, 4);
         }
         this.setText(this.defaultText);
