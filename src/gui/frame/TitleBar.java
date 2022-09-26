@@ -2,23 +2,25 @@ package gui.frame;
 
 import gui.components.ExitButton;
 import gui.components.MinimizeButton;
-import gui.components.TitleBarButton;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-
+/*
+A compound component/panel for the main application that allows
+a user to do normal title bar activities such as minimizing, closing
+saving, etc.
+ */
 public class TitleBar extends JPanel {
 
-    private Color separatorColor;
+    private final Color separatorColor;
     public TitleBar(JFrame frame, HashMap<String,Object> settings){
         super();
-        this.setBackground((Color)settings.get("UI_Background"));
-        this.setLayout(new BorderLayout());
-        this.setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(),40));
-        this.separatorColor = (Color)settings.get("TB_SeparatorColor");
+        setBackground((Color)settings.get("UI_Background"));
+        setLayout(new BorderLayout());
+        setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(),40));
+        separatorColor = (Color)settings.get("TB_SeparatorColor");
         //Title Bar Buttons
         JPanel titleBarButtonSurface = new JPanel();
         titleBarButtonSurface.setBackground((Color)settings.get("UI_Background"));
@@ -28,7 +30,7 @@ public class TitleBar extends JPanel {
         titleBarButtonSurface.add(minimize);
         titleBarButtonSurface.add(close);
         //Title Bar Icon
-        JLabel icon = new JLabel(new ImageIcon(new ImageIcon((String)settings.get("UI_Icon")).getImage().getScaledInstance(35,35,Image.SCALE_SMOOTH)));
+        JLabel icon = new JLabel((ImageIcon)settings.get("TB_Icon"));
         UIManager.put("Menu.selectionBackground", settings.get("TB_SelectionBackground"));
         UIManager.put("Menu.selectionForeground", settings.get("UI_Foreground"));
         UIManager.put("Menu.border", settings.get("UI_Background"));
@@ -73,14 +75,14 @@ public class TitleBar extends JPanel {
         iconMenu.setLayout(new BorderLayout());
         iconMenu.add(icon,BorderLayout.WEST);
         iconMenu.add(jmb,BorderLayout.EAST);
-        this.add(iconMenu,BorderLayout.WEST);
-        this.add(titleBarButtonSurface,BorderLayout.EAST);
+        add(iconMenu,BorderLayout.WEST);
+        add(titleBarButtonSurface,BorderLayout.EAST);
     }
     @Override
     public void paint(Graphics g){
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(this.separatorColor);
+        g2d.setColor(separatorColor);
         g2d.drawLine(0,39,(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(),39);
     }
     @Override

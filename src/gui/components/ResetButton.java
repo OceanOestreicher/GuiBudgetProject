@@ -7,10 +7,12 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
-
+/*
+Resets all applied row filters on a LineItemTable
+ */
 public class ResetButton extends TableButton {
-    private JLabel filterIcon;
-    public ResetButton(HashMap<String,Object> settings, LineItemTable itemList,JLabel filterIcon){
+    private final JLabel filterIcon;
+    public ResetButton(final HashMap<String,Object> settings, final LineItemTable itemList,final JLabel filterIcon){
         super(settings,itemList);
         this.setIcon(new ImageIcon(new ImageIcon((String)settings.get("B1_ResetIcon")).getImage().getScaledInstance(30,30,Image.SCALE_SMOOTH)) );
         this.setToolTipText("Reset Applied Filters");

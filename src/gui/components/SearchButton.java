@@ -1,25 +1,24 @@
 package gui.components;
 
 import gui.components.interfaces.Searchable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
+/*
+This button applies filters from searchable objects to a LineItemTable
+ */
 public class SearchButton extends TableButton {
-    private JLabel filterIcon;
-    private List<Searchable> searchableList;
+    private final JLabel filterIcon;
+    private final List<Searchable> searchableList;
 
-    public SearchButton(HashMap<String,Object> settings, LineItemTable itemList,JLabel filterIcon){
+    public SearchButton(final HashMap<String,Object> settings, final LineItemTable itemList,JLabel filterIcon){
         super(settings,itemList);
         this.setText("Search");
         this.searchableList = new ArrayList<>();
@@ -37,7 +36,7 @@ public class SearchButton extends TableButton {
         this.searchableList.add(c);
     }
     public void addSearchableComponents(Searchable[] c){
-        for(Searchable s: c) this.searchableList.add(s);
+        this.searchableList.addAll(Arrays.asList(c));
     }
     //Process results instead?
     @Override

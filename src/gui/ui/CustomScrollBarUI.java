@@ -1,16 +1,17 @@
 package gui.ui;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.util.HashMap;
-
+/*
+Renders scroll bars with the correct colors for the
+application. Removes the buttons from scroll bars
+ */
 public class CustomScrollBarUI extends BasicScrollBarUI {
 
-    private HashMap<String,Object> settings;
+    private final HashMap<String,Object> settings;
 
     public CustomScrollBarUI(HashMap<String,Object>settings){
         super();

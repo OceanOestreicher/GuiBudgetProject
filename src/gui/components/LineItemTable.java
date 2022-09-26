@@ -12,15 +12,14 @@ import java.awt.event.FocusEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+/*
+Represents a list of budget items. Items are always sorted by the newest to the oldest date. The first column
+is a variable column that is also used by the FilterBar component
+ */
 public class LineItemTable extends JTable {
 
-    private HashMap<String,Object> settings;
-
-    public LineItemTable(HashMap<String,Object> settings,String filterColumnName,TableModel dm, TableColumnModel cm, ListSelectionModel sm) {
+    public LineItemTable(final HashMap<String,Object> settings,final String filterColumnName,final TableModel dm, final TableColumnModel cm, final ListSelectionModel sm) {
         super(dm,cm,sm);
-        this.settings = settings;
-
         setModel(new DefaultTableModel(new Object[]{filterColumnName,"Date","Name","Amount","Note"},0));
         setGridColor((Color)settings.get("UI_Background"));
         setFont((Font)settings.get("IL_Font"));
@@ -35,12 +34,7 @@ public class LineItemTable extends JTable {
         getTableHeader().setDefaultRenderer(new CustomTableCellHeaderRenderer(settings));
         getTableHeader().setReorderingAllowed(false);
         TableRowSorter<DefaultTableModel> trs = new TableRowSorter<>((DefaultTableModel) getModel());
-        trs.setComparator(1, new Comparator<Date>() {
-            @Override
-            public int compare(Date o1, Date o2) {
-                return o1.compareTo(o2);
-            }
-        });
+        trs.setComparator(1, (Comparator<Date>) Date::compareTo);//Method reference since we are calling Comparator.compareTo(Date o1, Date o2)
         trs.setSortsOnUpdates(true);
         ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
@@ -71,7 +65,11 @@ public class LineItemTable extends JTable {
         this(settings,filterColumnName,new DefaultTableModel(rowData,columnNames));
     }
 
-    public void addEntry(String dataToAdd){
+    /*
+    Adds a new row with the data in dataToAdd. Data is separated by <> and blank values are
+    represented by <N/A>
+     */
+    public void addEntry(final String dataToAdd){
         String[] newRow = dataToAdd.split("<>");
         if(newRow.length > getColumnCount())throw new InputMismatchException("Invalid row data entered");
         Object[] rowData = new Object[getColumnCount()];
@@ -79,7 +77,7 @@ public class LineItemTable extends JTable {
         for(int i = 0; i < newRow.length;i++){
             if(i == 1 && !newRow[i].equals("<N/A>")){
                 try{rowData[i] = sdf.parse(newRow[i]);}
-                catch(ParseException p){}
+                catch(ParseException ignored){}
             }
             else if(i==1){
                 rowData[i] = null;
@@ -92,12 +90,12 @@ public class LineItemTable extends JTable {
         ((DefaultTableModel)getModel()).addRow(rowData);
     }
     public boolean isCellEditable(int row, int column){
-        if(column == 1) return false;
-        return true;
+        //if(column == 1) return false;
+        return false;
     }
     //Private Classes
     private static class CustomTableCellRenderer extends DefaultTableCellRenderer {
-        private HashMap<String,Object> settings;
+        private final HashMap<String,Object> settings;
 
         public CustomTableCellRenderer(HashMap<String,Object> settings){
             super();
@@ -140,7 +138,7 @@ public class LineItemTable extends JTable {
         }
     }
     private static class CustomTableCellHeaderRenderer extends DefaultTableCellRenderer{
-        private HashMap<String,Object> settings;
+        private final HashMap<String,Object> settings;
 
         public CustomTableCellHeaderRenderer(HashMap<String,Object>settings){
             super();

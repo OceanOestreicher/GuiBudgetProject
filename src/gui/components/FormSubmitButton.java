@@ -8,16 +8,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
-
+/*
+A button that adds form data from a form to a linked LineItemTable
+ */
 public class FormSubmitButton extends TableButton{
-    private Form form;
-    public FormSubmitButton(HashMap<String,Object> settings, LineItemTable itemList, Form newForm){
+    private final Form form;
+    public FormSubmitButton(final HashMap<String,Object> settings, final LineItemTable itemList, Form newForm){
         super(settings,itemList);
-        this.setBackground((Color)settings.get("B1_SubmitBackground"));
-        this.setPreferredSize(new Dimension(100,30));
-        this.setBorder(new EmptyBorder(0,0,0,0));
-        this.setText("Submit");
-        this.setName("SubmitFormButton");
+        setBackground((Color)settings.get("B1_SubmitBackground"));
+        setPreferredSize(new Dimension(100,30));
+        setBorder(new EmptyBorder(0,0,0,0));
+        setText("Submit");
+        setName("SubmitFormButton");
         form = newForm;
     }
 

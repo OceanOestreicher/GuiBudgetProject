@@ -1,31 +1,25 @@
 package gui.view.budget.container;
+
 import gui.components.*;
 import gui.components.interfaces.Searchable;
 import gui.ui.CustomScrollBarUI;
-
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.HashMap;
-public class TrackingContainer extends BudgetContainer {
-    private JTextField searchBox;
-    private SearchBar searchButton;
+/*
+A container for tracking income/expenses
+ */
+public class TrackingContainer extends JPanel {
 
-    public TrackingContainer(HashMap<String,Object> settings,String dropDownColumnName,String searchBarDefaultText){
-        super(settings);
-        this.setLayout(new BorderLayout());
+    public TrackingContainer(final HashMap<String,Object> settings,final String dropDownColumnName,final String searchBarDefaultText){
+        setLayout(new BorderLayout());
         JPanel optionsSurface = new JPanel();
         JPanel searchBarButtonSurface = new JPanel();
         JPanel filterSurface = new JPanel();
 
-        //Work in progress
         LineItemTable itemList = new LineItemTable(settings, dropDownColumnName);
         JScrollPane lineItemSurface = new JScrollPane(itemList);
-        //lineItemSurface.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);//TESTING
         JScrollBar scb = new JScrollBar(Adjustable.VERTICAL);
         scb.setUI(new CustomScrollBarUI(settings));
         lineItemSurface.setVerticalScrollBar(scb);
@@ -47,7 +41,7 @@ public class TrackingContainer extends BudgetContainer {
         gbc.weightx = 1;
         optionsSurface.add(filterSurface,gbc);
 
-        JLabel filterIcon = new JLabel(new ImageIcon(new ImageIcon((String)settings.get("FB_FilterIcon")).getImage().getScaledInstance(20,20,Image.SCALE_SMOOTH)));
+        JLabel filterIcon = new JLabel((ImageIcon)settings.get("FB_FilterIcon"));
         searchBarButtonSurface.setBackground((Color)settings.get("UI_Background"));
         searchBarButtonSurface.setLayout(new BorderLayout());
         SearchBar sb = new SearchBar(settings,searchBarDefaultText);
@@ -64,9 +58,9 @@ public class TrackingContainer extends BudgetContainer {
         searchBarButtonSurface.add(buttonSurface,BorderLayout.EAST);
         searchBarButtonSurface.setBorder(new EmptyBorder(5,5,5,5));
 
-        FilterBar fb = new FilterBar(this.settings, dropDownColumnName,itemList.getModel());
+        FilterBar fb = new FilterBar(settings, dropDownColumnName,itemList.getModel());
 
-        SearchButton se = new SearchButton(this.settings,itemList,filterIcon);
+        SearchButton se = new SearchButton(settings,itemList,filterIcon);
         se.addSearchableComponents(new Searchable[]{sb,fb});
 
         filterIcon.setVisible(false);
@@ -80,15 +74,8 @@ public class TrackingContainer extends BudgetContainer {
         filterSurface.add(searchButtonSurface,BorderLayout.EAST);
         filterSurface.setBorder(new CompoundBorder(new MatteBorder(0,0,1,0,(Color)settings.get("FB_SeparatorColor")),new EmptyBorder(5,5,5,5)));
 
-
-        this.add(optionsSurface,BorderLayout.PAGE_START);
-        this.add(lineItemSurface,BorderLayout.CENTER);//data table
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-       // SearchButton s = (SearchButton)e.getSource();
-        //System.out.println(s.returnResults());
+        add(optionsSurface,BorderLayout.PAGE_START);
+        add(lineItemSurface,BorderLayout.CENTER);//data table
     }
 
 }

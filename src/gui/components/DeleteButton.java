@@ -6,11 +6,13 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
-
-public class DeleteButton extends TableButton implements ActionListener {
-    public DeleteButton(HashMap<String,Object> settings, LineItemTable itemList) {
+/*
+    A Button that deletes selected rows from a LineItemTable
+ */
+public class DeleteButton extends TableButton {
+    public DeleteButton(final HashMap<String,Object> settings, final LineItemTable itemList) {
         super(settings,itemList);
-        this.setIcon(new ImageIcon(new ImageIcon((String) settings.get("B1_DeleteIcon")).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        this.setIcon((ImageIcon)settings.get("B1_DeleteIcon"));
         this.setToolTipText("Delete Selected Entry/Entries");
         this.setBorder(new LineBorder((Color)settings.get("UI_Border")));
         this.setPreferredSize(new Dimension(35,35));
@@ -28,7 +30,6 @@ public class DeleteButton extends TableButton implements ActionListener {
 
         }
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         removeSelected();

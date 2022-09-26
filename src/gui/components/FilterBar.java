@@ -1,122 +1,120 @@
 package gui.components;
 
 import gui.components.interfaces.Searchable;
-import gui.utils.Date;
+import gui.ui.CustomComboBoxUI;
+import gui.utils.DateUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
-public class FilterBar extends AbstractButton implements Searchable, TableModelListener {
+/*
+A compound component that allows a user to filter a TableModel by a drop-down menu based
+ on the first column of the table or by a date range
+ */
+public class FilterBar extends JComponent implements Searchable, TableModelListener {
     private static int U_ID = 1;
-    private JComboBox<String>optionsDropDown;
-    private LinkedList<String> optionsDropDownItemList;
-    private TableModel tableToFilter;
-    private TableModel unfilteredTable;
-    private boolean isFiltered = false;
-    private JTextField from,to;
-    public FilterBar(HashMap<String,Object> settings, String dropDownName, TableModel tableToFilter){
+    private final JComboBox<String>optionsDropDown;
+    private final TableModel tableToFilter;
+    private final JTextField from;
+    private final JTextField to;
+    public FilterBar(final HashMap<String,Object> settings, final String dropDownName, final TableModel tableToFilter){
         super();
-        this.unfilteredTable = tableToFilter;
-        this.unfilteredTable.addTableModelListener(this);
-        this.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.tableToFilter = tableToFilter;
+        this.tableToFilter.addTableModelListener(this);
+        setLayout(new FlowLayout(FlowLayout.LEFT));
 
         JLabel dropDownLabel = new JLabel(dropDownName);
         dropDownLabel.setForeground((Color)settings.get("FB_FontColor"));
         dropDownLabel.setBorder(new EmptyBorder(0,0,0,10));
-        this.add(dropDownLabel);
+        add(dropDownLabel);
 
-
-        this.optionsDropDown = new JComboBox<>();
-        this.optionsDropDown.setUI(new CustomComboBoxUI(settings));
-        this.optionsDropDown.setPreferredSize(new Dimension(100,30));
-        this.optionsDropDown.setBackground((Color)settings.get("FB_Background"));
-        this.optionsDropDown.setBorder(new LineBorder((Color)settings.get("FB_Border")));
-        this.optionsDropDown.setForeground((Color)settings.get("FB_FontColor"));
-        this.optionsDropDown.setFocusable(false);
-
+        optionsDropDown = new JComboBox<>();
+        optionsDropDown.setUI(new CustomComboBoxUI(settings));
+        optionsDropDown.setPreferredSize(new Dimension(100,30));
+        optionsDropDown.setBackground((Color)settings.get("FB_Background"));
+        optionsDropDown.setBorder(new LineBorder((Color)settings.get("FB_Border")));
+        optionsDropDown.setForeground((Color)settings.get("FB_FontColor"));
+        optionsDropDown.setFocusable(false);
+        optionsDropDown.addItem("");
         updateDropDown();
-        this.add(this.optionsDropDown);
+        add(optionsDropDown);
 
         JLabel fromLabel = new JLabel("From:");
         fromLabel.setForeground((Color)settings.get("FB_FontColor"));
-        this.add(fromLabel);
+        add(fromLabel);
 
-        this.from = new JTextField();
-        this.from.setPreferredSize(new Dimension(150,30));
-        this.from.setBackground((Color)settings.get("FB_Background"));
-        this.from.setFont((Font)settings.get("FB_Font"));
-        this.from.setForeground((Color)settings.get("FB_FontColor"));
-        this.from.setBorder(new EmptyBorder(0,0,0,0));
-        //Changes cursor color
-        this.from.setCaretColor((Color)settings.get("FB_FontColor"));
-        this.from.setCursor((Cursor)settings.get("UI_TextCursor"));
-        this.add(this.from);
+        from = new JTextField();
+        from.setPreferredSize(new Dimension(150,30));
+        from.setBackground((Color)settings.get("FB_Background"));
+        from.setFont((Font)settings.get("FB_Font"));
+        from.setForeground((Color)settings.get("FB_FontColor"));
+        from.setBorder(new EmptyBorder(0,0,0,0));
+        from.setCaretColor((Color)settings.get("FB_FontColor"));
+        from.setCursor((Cursor)settings.get("UI_TextCursor"));
+        add(from);
 
         JLabel toLabel = new JLabel("To:");
         toLabel.setForeground((Color)settings.get("FB_FontColor"));
-        this.add(toLabel);
+        add(toLabel);
 
-        this.to = new JTextField();
-        this.to.setPreferredSize(new Dimension(150,30));
-        this.to.setBackground((Color)settings.get("FB_Background"));
-        this.to.setFont((Font)settings.get("FB_Font"));
-        this.to.setForeground((Color)settings.get("FB_FontColor"));
-        this.to.setBorder(new EmptyBorder(0,0,0,0));
-        //Changes cursor color
-        this.to.setCaretColor((Color)settings.get("FB_FontColor"));
-        this.to.setCursor((Cursor)settings.get("UI_TextCursor"));
-        this.setName("FB_"+U_ID);
+        to = new JTextField();
+        to.setPreferredSize(new Dimension(150,30));
+        to.setBackground((Color)settings.get("FB_Background"));
+        to.setFont((Font)settings.get("FB_Font"));
+        to.setForeground((Color)settings.get("FB_FontColor"));
+        to.setBorder(new EmptyBorder(0,0,0,0));
+        to.setCaretColor((Color)settings.get("FB_FontColor"));
+        to.setCursor((Cursor)settings.get("UI_TextCursor"));
+        setName("FB_"+U_ID);
         U_ID++;
-        this.add(this.to);
-
+        add(this.to);
     }
-
+    /*
+    Updates the drop-down menu whenever the first column of the table changes. New entries will be added in
+    capitalized form
+    ocean -> Ocean
+     */
     private void updateDropDown() {
-        /*
-        If filtered, don't remove options, otherwise do
-        Remove Options, Add Options, Update Drop Down
-         */
+        HashMap<String,Integer> alreadyListed = new HashMap<>(optionsDropDown.getItemCount()-1);
 
-        if(!this.isFiltered){
-            this.optionsDropDown.removeAllItems();
-            this.optionsDropDownItemList = new LinkedList<>();
-            this.optionsDropDownItemList.add("");
-            for(int i = 0; i < unfilteredTable.getRowCount();i++){
-                if(!this.optionsDropDownItemList.contains((String)unfilteredTable.getValueAt(i,0))){
-                    this.optionsDropDownItemList.add((String)unfilteredTable.getValueAt(i,0));
-                }
-            }
-            for(String s: this.optionsDropDownItemList){
-                this.optionsDropDown.addItem(s);
+        for(int i = 1; i < optionsDropDown.getItemCount();i++){
+            alreadyListed.put(optionsDropDown.getItemAt(i),1);
+        }
+        for(int i = 0; i < tableToFilter.getRowCount();i++){
+            String value = ((String)tableToFilter.getValueAt(i,0)).toLowerCase();
+            value = value.substring(0,1).toUpperCase()+value.substring(1);
+            if(!alreadyListed.containsKey(value)){
+                optionsDropDown.addItem(value);
+                alreadyListed.put(value,1);
             }
         }
-        //else if filtered and changed update
     }
-
+    /*
+    Returns a RowFilter.andFilter object that will check for matches in the drop down column and/or dates
+    that fall between or on the from/to text fields. Blank entries/incorrect entries are ignored. This also resets
+    the drop-down and date range fields
+     */
     @Override
     public RowFilter<Object, Object> getResults() {
         ArrayList<RowFilter<Object,Object>> filters = new ArrayList<>();
         RowFilter<Object,Object> filter = null;
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
 
-        if(this.optionsDropDown.getSelectedIndex()!= 0){
-            filters.add( RowFilter.regexFilter(this.optionsDropDown.getSelectedItem()+"+",0));
+        if(optionsDropDown.getSelectedIndex()!= 0){
+            filters.add( RowFilter.regexFilter("(?i)"+optionsDropDown.getSelectedItem()+"+",0));//(?i) ignore case regex
         }
-        if(!this.from.getText().isEmpty()){
-            String date = Date.getDate(this.from);
-            if(!Date.invalidDate(date)){
+        if(!from.getText().isEmpty()){
+            String date = DateUtils.getDate(from);
+            if(!DateUtils.invalidDate(date)){
                 try {
                     ArrayList<RowFilter<Object,Object>> fromDateFilters = new ArrayList<>();
                     fromDateFilters.add(RowFilter.dateFilter(RowFilter.ComparisonType.EQUAL,sdf.parse(date)));
@@ -124,13 +122,13 @@ public class FilterBar extends AbstractButton implements Searchable, TableModelL
                     filters.add(RowFilter.orFilter(fromDateFilters));
 
                 }
-                catch(ParseException p){}
+                catch(ParseException ignored){}
             }
 
         }
-        if(!this.to.getText().isEmpty()){
-            String date = Date.getDate(this.to);
-            if(!Date.invalidDate(date)){
+        if(!to.getText().isEmpty()){
+            String date = DateUtils.getDate(to);
+            if(!DateUtils.invalidDate(date)){
                 try {
                     ArrayList<RowFilter<Object,Object>> toDateFilters = new ArrayList<>();
                     toDateFilters.add(RowFilter.dateFilter(RowFilter.ComparisonType.EQUAL,sdf.parse(date)));
@@ -138,48 +136,22 @@ public class FilterBar extends AbstractButton implements Searchable, TableModelL
                     filters.add(RowFilter.orFilter(toDateFilters));
 
                 }
-                catch(ParseException p){}
+                catch(ParseException ignored){}
             }
 
         }
         if(filters.size() > 0){
             filter = RowFilter.andFilter(filters);
         }
-        this.from.setText("");
-        this.to.setText("");
-        this.optionsDropDown.setSelectedIndex(0);
+        from.setText("");
+        to.setText("");
+        optionsDropDown.setSelectedIndex(0);
         return filter;
     }
 
     @Override
     public void tableChanged(TableModelEvent e) {
+        //Check if the drop-down might have more options
         if(e.getColumn() == 0 || e.getColumn() == TableModelEvent.ALL_COLUMNS) updateDropDown();
-    }
-
-    private static class CustomComboBoxUI extends BasicComboBoxUI{
-       private HashMap<String,Object>settings;
-        public CustomComboBoxUI(HashMap<String,Object>settings){
-            super();
-            this.settings=settings;
-
-        }
-        @Override
-        protected JButton createArrowButton() {
-            JButton button = new BasicArrowButton(BasicArrowButton.SOUTH,
-                    (Color)this.settings.get("FB_ArrowBackground"),
-                    (Color)this.settings.get("FB_Border"),
-                    (Color)this.settings.get("FB_ArrowForeground"),//Main part of button
-                    (Color)this.settings.get("FB_Border"));
-            return button;
-        }
-        @Override
-        public void installUI( JComponent c ){
-            super.installUI(c);
-            listBox.setBackground((Color)this.settings.get("FB_ListBackground"));
-            listBox.setForeground((Color)this.settings.get("FB_FontColor"));
-            listBox.setSelectionBackground((Color)this.settings.get("FB_Background"));
-            listBox.setSelectionForeground((Color)this.settings.get("FB_ListSelectedTextColor"));
-        }
-
     }
 }

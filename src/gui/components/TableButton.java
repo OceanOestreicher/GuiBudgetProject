@@ -1,16 +1,14 @@
 package gui.components;
 
-import javax.swing.border.LineBorder;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.HashMap;
-
+/*
+General button to represent any button that interacts with a
+LineItemTable
+ */
 public abstract class TableButton extends GeneralButton  {
     protected LineItemTable itemList;
 
-    public TableButton(HashMap<String,Object> settings, LineItemTable itemList){
+    public TableButton(final HashMap<String,Object> settings, final LineItemTable itemList){
         super(settings);
         this.itemList = itemList;
         this.setMouseStateColor(GeneralButton.MOUSE_PRESSED,"GB_ButtonPressed");

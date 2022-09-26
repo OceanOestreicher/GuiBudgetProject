@@ -1,18 +1,33 @@
 package gui.utils;
 
 import javax.swing.*;
-
-public class Date {
-
+/*
+Utility class to provide some extra validation and functionality for
+dates.
+ */
+public class DateUtils {
+    /*
+    Formats dates to always be of the form MM-DD--YYYY
+     */
     public static String getDate(JTextField dateField){
-        String[] dateData = dateField.getText().split("[/-]");
+        String[] dateData = dateField.getText().split("[-/.]");
         if(dateData[0].length() == 1)dateData[0] = "0"+dateData[0];
-        if(dateData[1].length() == 1)dateData[1] = "0"+dateData[1];
-        if(dateData[2].length()==2)dateData[2] = "20"+dateData[2];
-        return dateData[0]+"-"+dateData[1]+"-"+dateData[2];
+        if(dateData.length >= 2 && dateData[1].length() == 1)dateData[1] = "0"+dateData[1];
+        if(dateData.length >= 3 && dateData[2].length()==2)dateData[2] = "20"+dateData[2];
+        String result = "";
+        int count = 0;
+        for(String s:dateData){
+            result+= s + (count <2 ? "-":"");
+            count++;
+        }
+        return result;
     }
+    /*
+    Validates whether an entered date is correct or not
+     */
     public static boolean invalidDate(String date){
-        String[] dateArray = date.split("[-/]");
+        if(date.isBlank())return true;
+        String[] dateArray = date.split("[-/.]");
         if(dateArray.length == 3){
             int month,day,year;
             month = Integer.parseInt(dateArray[0]);

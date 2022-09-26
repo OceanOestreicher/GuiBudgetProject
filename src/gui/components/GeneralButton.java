@@ -6,16 +6,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
-
+/*
+Represents any button in the application. Provides general purpose
+utility for default behaviors such as mouse events or default looks
+ */
 public abstract class GeneralButton extends JButton implements ActionListener {
     public static final int MOUSE_PRESSED = 1;
     public static final int MOUSE_RELEASED = 2;
     public static final int MOUSE_ENTERED = 3;
     public static final int MOUSE_EXITED= 4;
-    protected HashMap<String,Object> settings;
+    protected final HashMap<String,Object> settings;
     private Color mousePressed = null, mouseReleased=null, mouseEntered=null, mouseExited=null;
 
-    public GeneralButton(HashMap<String,Object> settings){
+    public GeneralButton(final HashMap<String,Object> settings){
         super();
         this.settings = settings;
         this.setContentAreaFilled(false);

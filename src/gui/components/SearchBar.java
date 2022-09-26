@@ -7,13 +7,15 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
-
+/*
+A component that allows a user to type in text that will be searched in a JTable
+ */
 public class SearchBar extends JTextField implements Searchable {
 
     private static int U_ID = 1;
-    private String defaultText;
+    private final String defaultText;
 
-    public SearchBar(final HashMap<String,Object> settings,String defaultText){
+    public SearchBar(final HashMap<String,Object> settings,final String defaultText){
         super();
         this.defaultText = defaultText;
         this.setBackground((Color)settings.get("SE_Background"));
@@ -43,9 +45,10 @@ public class SearchBar extends JTextField implements Searchable {
     public RowFilter<Object, Object> getResults() {
         RowFilter<Object,Object>filter = null;
         if(!this.getText().equals(this.defaultText)&&!this.getText().isEmpty()){
-            filter = RowFilter.regexFilter(this.getText()+"+", 0, 1, 2, 3, 4);
+            filter = RowFilter.regexFilter("(?i)"+this.getText()+"+", 0, 1, 2, 3, 4);//(?i) case insensitive flag
         }
         this.setText(this.defaultText);
         return filter;
     }
+
 }
