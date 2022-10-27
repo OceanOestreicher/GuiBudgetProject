@@ -1,6 +1,6 @@
 package gui.components;
 
-import gui.components.interfaces.Searchable;
+import gui.interfaces.Searchable;
 import gui.ui.CustomComboBoxUI;
 import gui.utils.DateUtils;
 
@@ -9,20 +9,25 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /*
 A compound component that allows a user to filter a TableModel by a drop-down menu based
  on the first column of the table or by a date range
  */
 public class FilterBar extends JComponent implements Searchable, TableModelListener {
+    private static final int ADD = 1;
+    private static final int DELETE = -1;
     private static int U_ID = 1;
     private final JComboBox<String>optionsDropDown;
+    private HashMap<String,Integer> options;
     private final TableModel tableToFilter;
     private final JTextField from;
     private final JTextField to;
@@ -45,7 +50,8 @@ public class FilterBar extends JComponent implements Searchable, TableModelListe
         optionsDropDown.setForeground((Color)settings.get("FB_FontColor"));
         optionsDropDown.setFocusable(false);
         optionsDropDown.addItem("");
-        updateDropDown();
+        options = new HashMap<>();
+        //updateDropDown(FilterBar.ADD, "");
         add(optionsDropDown);
 
         JLabel fromLabel = new JLabel("From:");
@@ -83,20 +89,39 @@ public class FilterBar extends JComponent implements Searchable, TableModelListe
     capitalized form
     ocean -> Ocean
      */
-    private void updateDropDown() {
-        HashMap<String,Integer> alreadyListed = new HashMap<>(optionsDropDown.getItemCount()-1);
+    private void updateDropDown(int operation, String value) {
+        //Capitalize
+        value = value.toLowerCase();
+        if(value.length() > 0)value = value.substring(0,1).toUpperCase()+value.substring(1);
 
-        for(int i = 1; i < optionsDropDown.getItemCount();i++){
-            alreadyListed.put(optionsDropDown.getItemAt(i),1);
+        switch(operation){
+            case FilterBar.ADD:
+                if(!options.containsKey(value)){
+                    options.put(value,1);
+                    optionsDropDown.addItem(value);
+                }
+                else options.put(value,options.get(value)+1);
+                break;
+            case FilterBar.DELETE:
+                if(options.containsKey(value)){
+                    options.put(value,options.get(value)-1);
+                    if(options.get(value)==0){
+                        options.remove(value);
+                        optionsDropDown.removeItem(value);
+                    }
+                }
+                break;
         }
-        for(int i = 0; i < tableToFilter.getRowCount();i++){
-            String value = ((String)tableToFilter.getValueAt(i,0)).toLowerCase();
-            value = value.substring(0,1).toUpperCase()+value.substring(1);
-            if(!alreadyListed.containsKey(value)){
-                optionsDropDown.addItem(value);
-                alreadyListed.put(value,1);
-            }
+    }
+    private void updateDropDown(int operation, String[] values){
+        for(String s: values){
+            updateDropDown(operation,s);
         }
+    }
+    private void clearDropDown(){
+        optionsDropDown.removeAllItems();
+        optionsDropDown.addItem("");
+        options = new HashMap<>();
     }
     /*
     Returns a RowFilter.andFilter object that will check for matches in the drop down column and/or dates
@@ -151,7 +176,25 @@ public class FilterBar extends JComponent implements Searchable, TableModelListe
 
     @Override
     public void tableChanged(TableModelEvent e) {
-        //Check if the drop-down might have more options
-        if(e.getColumn() == 0 || e.getColumn() == TableModelEvent.ALL_COLUMNS) updateDropDown();
+        //If we deleted every row
+        if(e.getType() == TableModelEvent.DELETE && tableToFilter.getRowCount() == 0){
+            clearDropDown();
+            return;
+        }
+        //Check if the drop-down might have more or less options
+        DefaultTableModel theTable = ((DefaultTableModel)e.getSource());
+        if(e.getFirstRow() != e.getLastRow()){
+            String[] values = new String[e.getLastRow() - e.getFirstRow()];
+            for(int r = e.getFirstRow(), ai = 0; r <= e.getLastRow();r++,ai++){
+                values[ai] = (String)theTable.getValueAt(r,0);
+            }
+            if(e.getType() == TableModelEvent.INSERT) updateDropDown(FilterBar.ADD,values);
+            else if(e.getType() == TableModelEvent.DELETE)updateDropDown(FilterBar.DELETE,values);
+        }
+        else {
+            String value = (String)theTable.getValueAt(e.getFirstRow(),0);
+            if(e.getType() == TableModelEvent.INSERT) updateDropDown(FilterBar.ADD,value);
+            else if(e.getType() == TableModelEvent.DELETE)updateDropDown(FilterBar.DELETE,value);
+        }
     }
 }
